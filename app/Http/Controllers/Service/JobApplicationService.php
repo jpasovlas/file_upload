@@ -4,18 +4,28 @@ namespace App\Http\Controllers\Service;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Repository\JobApplicationRepository;
-use Illuminate\Support\Facades\Storage;
 
 class JobApplicationService extends Controller
 {
 
+    /**
+     * @var JobApplicationRepository $jobApplicationRepository
+     */
     protected $jobApplicationRepository;
 
+    /**
+     * Constructor
+     *
+     * @param JobApplicationRepository $jobApplicationRepository
+     */
     public function __construct(JobApplicationRepository $jobApplicationRepository)
     {
         $this->jobApplicationRepository = $jobApplicationRepository;
     }
 
+    /**
+     * Get all applicants
+     */
     public function getAllApplicants()
     {
         $applicants = $this->jobApplicationRepository->getAllApplicants();
@@ -23,7 +33,14 @@ class JobApplicationService extends Controller
         return $applicants;
     }
 
-    public function getApplicantById($id)
+    /**
+     * Get specific applicant by ID
+     *
+     * @param int $id
+     *
+     * @return Object
+     */
+    public function getApplicantById(int $id)
     {
 
         $applicant = $this->jobApplicationRepository->getApplicantById($id);
@@ -31,7 +48,14 @@ class JobApplicationService extends Controller
         return $applicant;
     }
 
-    public function saveApplicant($request)
+    /**
+     * Create new applicant
+     *
+     * @param object $request
+     *
+     * @return Object
+     */
+    public function saveApplicant(object $request)
     {
         $validatedData = $request->validated();
 
@@ -45,13 +69,23 @@ class JobApplicationService extends Controller
         return $applicant;
     }
 
-    public function updateApplicantById($id, $request)
+    /**
+     * Update applicant by ID
+     *
+     * @param int $id
+     * @param object $request
+     *
+     * @return Object
+     */
+    public function updateApplicantById(int $id, object $request)
     {
         $validatedData = $request->validated();
 
         if ($request->hasFile('resume')) {
             $applicant = $this->getApplicantById($id);
-            Storage::disk('public')->delete($applicant->resume);
+
+            $this->jobApplicationRepository->deleteFile($applicant->resume);
+
             $filePath = $request->file('resume')->store('uploads', 'public');
             $validatedData['resume'] = $filePath;
         }
@@ -61,7 +95,14 @@ class JobApplicationService extends Controller
         return $applicant;
     }
 
-    public function deleteApplicantById($id)
+    /**
+     * Delete applicant by ID
+     *
+     * @param int $id
+     *
+     * @return Object
+     */
+    public function deleteApplicantById(int $id)
     {
         $applicant = $this->jobApplicationRepository->deleteApplicantById($id);
 

@@ -13,13 +13,26 @@ use App\Constants\AppConstants;
 class JobApplicationApiController extends Controller
 {
 
+    /**
+     * @var JobApplicationService $jobApplicationService
+     */
     protected $jobApplicationService;
 
+    /**
+     * Constructor
+     *
+     * @param JobApplicationService $jobApplicationService
+     */
     public function __construct(JobApplicationService $jobApplicationService)
     {
         $this->jobApplicationService = $jobApplicationService;
     }
 
+    /**
+     * Get all applicants
+     *
+     * @return JsonResponse
+     */
     public function getAllApplicants()
     {
         try {
@@ -33,7 +46,14 @@ class JobApplicationApiController extends Controller
         }
     }
 
-    public function getApplicantById($id)
+    /**
+     * Get specific applicant by ID
+     *
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function getApplicantById(int $id)
     {
         try {
             $applicant = $this->jobApplicationService->getApplicantById($id);
@@ -46,6 +66,13 @@ class JobApplicationApiController extends Controller
         }
     }
 
+    /**
+     * Create new applicant
+     *
+     * @param JobApplicationRequest $request
+     *
+     * @return JsonResponse
+     */
     public function saveApplicant(JobApplicationRequest $request)
     {
         try {
@@ -68,15 +95,23 @@ class JobApplicationApiController extends Controller
         }
     }
 
-    public function updateApplicantById($id, JobApplicationUpdateRequest $request)
+    /**
+     * Update specific applicant by ID
+     *
+     * @param int $id
+     * @param JobApplicationUpdateRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function updateApplicantById(int $id, JobApplicationUpdateRequest $request)
     {
         try {
-            $article = $this->jobApplicationService->updateApplicantById($id, $request);
+            $applicant = $this->jobApplicationService->updateApplicantById($id, $request);
 
             return response()->json([
                 'success' => true,
                 'message' => AppConstants::APPLICANT_UPDATED_MESSAGE,
-                'data' => $article
+                'data' => $applicant
             ], 201);
         } catch (Exception $e) {
             Log::error('An error occurred: ' . $e->getMessage());
@@ -85,15 +120,22 @@ class JobApplicationApiController extends Controller
         }
     }
 
-    public function deleteApplicantById($id)
+    /**
+     * Delete specific applicant by ID
+     *
+     * @param int $id
+     *
+     * @return JsonResponse
+     */
+    public function deleteApplicantById(int $id)
     {
         try {
-            $article = $this->jobApplicationService->deleteApplicantById($id);
+            $applicant = $this->jobApplicationService->deleteApplicantById($id);
 
             return response()->json([
                 'success' => true,
                 'message' => AppConstants::APPLICANT_DELETED_MESSAGE,
-                'data' => $article
+                'data' => $applicant
             ], 201);
         } catch (Exception $e) {
             Log::error('An error occurred: ' . $e->getMessage());

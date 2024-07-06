@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Repository;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
+use App\Traits\FileTrait;
 
 class JobApplicationRepository extends Controller
 {
 
+    use FileTrait;
+
     /**
      * Get all applicants
-     *
-     * @param int $id
      *
      * @return mixed
      */
@@ -74,7 +75,10 @@ class JobApplicationRepository extends Controller
      */
     public function deleteApplicantById($id)
     {
-        $applicant = JobApplication::where('id', $id)->delete();
+        $applicant = $this->getApplicantById($id);
+
+        $this->deleteFile($applicant->resume);
+        $applicant->delete();
 
         return $applicant;
     }
