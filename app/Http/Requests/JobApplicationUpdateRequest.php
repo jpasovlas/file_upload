@@ -25,7 +25,7 @@ class JobApplicationUpdateRequest extends FormRequest
             'full_name' => 'required|string',
             'position' => 'required|string',
             'cover_letter' => 'required|string',
-            'resume' => 'required|file|mimes:pdf,doc,docx|max:4000'
+            'resume' => 'sometimes|file|mimes:pdf,doc,docx|max:4000'
         ];
     }
 
